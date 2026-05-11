@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Heart Disease Predictor</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">ML Pipeline</p>
+          <h1>Heart Disease Predictor</h1>
+        </div>
+        <nav class="quick-links" aria-label="Enlaces de servicios">
+          <a href="/docs" target="_blank" rel="noreferrer">API Docs</a>
+          <a href="http://localhost:3000/d/heart-api/heart-disease-model-metrics?orgId=1&refresh=5s" target="_blank" rel="noreferrer">Grafana</a>
+        </nav>
+        <div class="connection">
+          <label for="apiUrl">API</label>
+          <input id="apiUrl" type="url" value="http://localhost:8000">
+          <button id="refreshStatus" type="button" title="Actualizar estado">Actualizar</button>
+          <span id="apiStatus" class="status-pill status-muted">Sin comprobar</span>
+        </div>
+      </header>
+
+      <section class="workspace">
+        <form id="predictionForm" class="panel form-panel">
+          <div class="panel-heading">
+            <h2>Paciente</h2>
+            <button id="loadSample" type="button" title="Cargar muestra">Muestra</button>
+          </div>
+
+          <div class="field-grid">
+            <label>
+              Edad
+              <input name="age" type="number" min="1" max="120" value="54" required>
+            </label>
+            <label>
+              Sexo
+              <select name="sex" required>
+                <option value="1">Hombre</option>
+                <option value="0">Mujer</option>
+              </select>
+            </label>
+            <label>
+              Dolor toracico
+              <select name="chest" required>
+                <option value="1">Tipo 1</option>
+                <option value="2">Tipo 2</option>
+                <option value="3">Tipo 3</option>
+                <option value="4" selected>Tipo 4</option>
+              </select>
+            </label>
+            <label>
+              Presion reposo
+              <input name="resting_blood_pressure" type="number" min="50" max="250" value="130" required>
+            </label>
+            <label>
+              Colesterol
+              <input name="serum_cholestoral" type="number" min="100" max="600" value="246" required>
+            </label>
+            <label>
+              Glucemia &gt; 120
+              <select name="fasting_blood_sugar" required>
+                <option value="0" selected>No</option>
+                <option value="1">Si</option>
+              </select>
+            </label>
+            <label>
+              ECG reposo
+              <select name="resting_electrocardiographic_results" required>
+                <option value="0" selected>0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </label>
+            <label>
+              FC maxima
+              <input name="maximum_heart_rate_achieved" type="number" min="60" max="220" value="150" required>
+            </label>
+            <label>
+              Angina ejercicio
+              <select name="exercise_induced_angina" required>
+                <option value="0" selected>No</option>
+                <option value="1">Si</option>
+              </select>
+            </label>
+            <label>
+              Oldpeak
+              <input name="oldpeak" type="number" min="0" max="10" step="0.1" value="1.2" required>
+            </label>
+            <label>
+              Pendiente ST
+              <select name="slope" required>
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+              </select>
+            </label>
+            <label>
+              Vasos mayores
+              <select name="number_of_major_vessels" required>
+                <option value="0" selected>0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </label>
+            <label>
+              Thal
+              <select name="thal" required>
+                <option value="3" selected>3</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+              </select>
+            </label>
+          </div>
+
+          <button id="submitButton" class="primary-action" type="submit">Predecir</button>
+        </form>
+
+        <section class="panel result-panel" aria-live="polite">
+          <div class="panel-heading">
+            <h2>Resultado</h2>
+            <span id="modelVersion" class="status-pill status-muted">Modelo</span>
+          </div>
+          <div id="emptyState" class="empty-state">Sin prediccion</div>
+          <div id="resultContent" class="result-content hidden">
+            <div id="riskBadge" class="risk-badge">Riesgo</div>
+            <div class="prediction-main">
+              <span id="predictionLabel">-</span>
+              <strong id="confidence">0%</strong>
+            </div>
+            <div class="probability-row">
+              <span>No disease</span>
+              <meter id="noDiseaseMeter" min="0" max="1" value="0"></meter>
+              <strong id="noDiseaseProb">0%</strong>
+            </div>
+            <div class="probability-row">
+              <span>Disease</span>
+              <meter id="diseaseMeter" min="0" max="1" value="0"></meter>
+              <strong id="diseaseProb">0%</strong>
+            </div>
+            <dl class="meta-grid">
+              <div>
+                <dt>Inferencia</dt>
+                <dd id="inferenceTime">-</dd>
+              </div>
+              <div>
+                <dt>Version</dt>
+                <dd id="resultVersion">-</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel grafana-panel">
+        <div class="panel-heading">
+          <h2>Grafana</h2>
+          <a id="grafanaLink" href="http://localhost:3000/d/heart-api/heart-disease-model-metrics?orgId=1&refresh=5s" target="_blank" rel="noreferrer">Abrir dashboard</a>
+        </div>
+        <iframe
+          title="Dashboard de metricas del modelo"
+          src="http://localhost:3000/d/heart-api/heart-disease-model-metrics?orgId=1&refresh=5s&from=now-30m&to=now&kiosk"
+        ></iframe>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

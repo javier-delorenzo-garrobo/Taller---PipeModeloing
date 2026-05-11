@@ -1,0 +1,15 @@
+{
+  "active_version": "1.0.0",
+  "active_artifact": "models/heart_disease_model_v1.0.0_af02f328c008.joblib",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "artifact": "models/heart_disease_model_v1.0.0_af02f328c008.joblib",
+      "sha256": "af02f328c008eedb9507676c1d4de86ec6156d396f9f697ea688587dbebc9318",
+      "sha256_short": "af02f328c008",
+      "size_bytes": 2112,
+      "created_at": "2026-05-11T19:02:57.040305Z",
+      "source": "heart_disease_model.joblib"
+    }
+  ]
+}

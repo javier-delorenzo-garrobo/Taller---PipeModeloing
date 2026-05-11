@@ -1,0 +1,13 @@
+# Core ML
+scikit-learn==1.0.2
+joblib==1.1.0
+numpy==1.22.3
+pandas==1.4.2
+
+# API Framework
+fastapi==0.95.0
+uvicorn[standard]==0.21.1
+pydantic==1.10.7
+
+# Monitoring (Parte 4)
+prometheus-client==0.16.0
