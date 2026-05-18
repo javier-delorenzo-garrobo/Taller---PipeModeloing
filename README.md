@@ -3,6 +3,9 @@
 Stack local para servir una API de inferencia, recoger metricas con Prometheus,
 visualizarlas en Grafana y lanzar predicciones desde un frontend web.
 
+Para una explicacion general del sistema y de como encajan sus partes, ver
+`DOCUMENTACION_PROYECTO.md`.
+
 ## Arranque
 
 ```bash

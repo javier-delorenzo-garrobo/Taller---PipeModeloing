@@ -1,5 +1,0 @@
-api funcionando con dockerfile
-montar grafana con metrix
-hacer un dashboard que visualice las metricas del modelo
-desde el front poder hacer predicciones con la api y que se muestre con grafana
-automatizar el proceso de versionado del modelo
